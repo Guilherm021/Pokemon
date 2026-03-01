@@ -1,12 +1,10 @@
-import java.util.Random;
-
 public class Pokemon {
 
     String nome;
     String tipo;
     int vida;
     int ataque;
-    int pocoes = 2;
+    int pocoes = 2; // cada Pokémon começa com 2 poções
 
     public Pokemon(String nome, String tipo, int vida, int ataque) {
         this.nome = nome;
@@ -16,32 +14,29 @@ public class Pokemon {
     }
 
     public void atacar(Pokemon inimigo) {
-        Random random = new Random();
-        int dano = ataque;
+        int danoFinal = this.ataque;
 
-        // 20% chance de crítico
-        if (random.nextInt(100) < 20) {
-            dano *= 2;
-            System.out.println("💥 ATAQUE CRÍTICO!");
+        // vantagem de tipo
+        if ((this.tipo.equals("Fogo") && inimigo.tipo.equals("Planta")) ||
+                (this.tipo.equals("Planta") && inimigo.tipo.equals("Água")) ||
+                (this.tipo.equals("Água") && inimigo.tipo.equals("Fogo"))) {
+            danoFinal += 5;
+            System.out.println("🔥 Ataque super efetivo!");
         }
 
-        // Sistema de vantagem de tipo
-        if (vantagemTipo(this.tipo, inimigo.tipo)) {
-            dano += 10;
-            System.out.println("🔥 Super efetivo!");
-        }
+        inimigo.vida -= danoFinal;
+        if (inimigo.vida < 0) inimigo.vida = 0;
 
-        inimigo.vida -= dano;
-        System.out.println(nome + " causou " + dano + " de dano!");
+        System.out.println(this.nome + " causou " + danoFinal + " de dano em " + inimigo.nome + "!");
     }
 
     public void usarPocao() {
         if (pocoes > 0) {
             vida += 20;
             pocoes--;
-            System.out.println(nome + " usou poção e recuperou 20 de vida!");
+            System.out.println(nome + " usou poção! Vida +20 | Poções restantes: " + pocoes);
         } else {
-            System.out.println("Sem poções!");
+            System.out.println(nome + " não tem poções restantes!");
         }
     }
 
@@ -51,11 +46,5 @@ public class Pokemon {
 
     public void mostrarStatus() {
         System.out.println(nome + " (" + tipo + ") - Vida: " + vida + " | Poções: " + pocoes);
-    }
-
-    private boolean vantagemTipo(String atacante, String defensor) {
-        return (atacante.equals("Fogo") && defensor.equals("Planta")) ||
-                (atacante.equals("Planta") && defensor.equals("Água")) ||
-                (atacante.equals("Água") && defensor.equals("Fogo"));
     }
 }

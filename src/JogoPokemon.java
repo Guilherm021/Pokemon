@@ -34,38 +34,40 @@ public class JogoPokemon {
                 new Pokemon("Bulbasaur", "Planta", 105, 19)
         };
 
-        Pokemon inimigo = inimigos[random.nextInt(3)];
+        int vitorias = 0;
 
-        System.out.println("\n⚔️ Seu oponente é " + inimigo.nome + "!\n");
+        while (jogador.estaVivo()) {
+            Pokemon inimigo = inimigos[random.nextInt(inimigos.length)];
+            System.out.println("\n⚔️ Novo oponente: " + inimigo.nome + "!\n");
 
-        while (jogador.estaVivo() && inimigo.estaVivo()) {
+            while (jogador.estaVivo() && inimigo.estaVivo()) {
+                jogador.mostrarStatus();
+                inimigo.mostrarStatus();
 
-            jogador.mostrarStatus();
-            inimigo.mostrarStatus();
+                System.out.println("\nEscolha:");
+                System.out.println("1 - Atacar");
+                System.out.println("2 - Usar Poção");
 
-            System.out.println("\nEscolha uma ação:");
-            System.out.println("1 - Atacar");
-            System.out.println("2 - Usar Poção");
+                int acao = scanner.nextInt();
 
-            int acao = scanner.nextInt();
+                if (acao == 1) {
+                    jogador.atacar(inimigo);
+                } else if (acao == 2) {
+                    jogador.usarPocao();
+                }
 
-            if (acao == 1) {
-                jogador.atacar(inimigo);
-            } else if (acao == 2) {
-                jogador.usarPocao();
+                if (inimigo.estaVivo()) {
+                    inimigo.atacar(jogador);
+                }
             }
 
-            if (inimigo.estaVivo()) {
-                inimigo.atacar(jogador);
+            if (jogador.estaVivo()) {
+                vitorias++;
+                System.out.println("🏆 Vitórias consecutivas: " + vitorias);
             }
         }
 
-        if (jogador.estaVivo()) {
-            System.out.println("\n🏆 VOCÊ VENCEU!");
-        } else {
-            System.out.println("\n💀 VOCÊ PERDEU!");
-        }
-
+        System.out.println("💀 Game Over!");
         scanner.close();
     }
 }
