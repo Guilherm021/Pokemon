@@ -51,19 +51,33 @@ public class JogoPokemon {
                 int acao = scanner.nextInt();
 
                 if (acao == 1) {
-                    jogador.atacar(inimigo);
+                    System.out.println("\nEscolha seu ataque:");
+                    for (int i = 0; i < jogador.numeroAtaques; i++) {
+                        System.out.println((i + 1) + " - " + jogador.ataques[i]);
+                    }
+
+                    int ataqueEscolhido = scanner.nextInt() - 1;
+                    jogador.atacar(inimigo, ataqueEscolhido);
+
                 } else if (acao == 2) {
                     jogador.usarPocao();
+                } else {
+                    System.out.println("Opção inválida!");
                 }
 
                 if (inimigo.estaVivo()) {
-                    inimigo.atacar(jogador);
+                    int ataqueInimigo = random.nextInt(inimigo.numeroAtaques);
+                    inimigo.atacar(jogador, ataqueInimigo);
                 }
             }
 
             if (jogador.estaVivo()) {
                 vitorias++;
                 System.out.println("🏆 Vitórias consecutivas: " + vitorias);
+
+                if (vitorias % 2 == 0) {
+                    jogador.evoluir();
+                }
             }
         }
 
