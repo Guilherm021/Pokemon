@@ -10,6 +10,10 @@ public class Pokemon {
     int[] danosAtaques = new int[4];
     int numeroAtaques = 2;
 
+    int nivel = 1;
+    int xp = 0;
+    int xpParaProximoNivel = 100;
+
     public Pokemon(String nome, String tipo, int vida, int ataque) {
         this.nome = nome;
         this.tipo = tipo;
@@ -104,12 +108,40 @@ public class Pokemon {
         }
     }
 
+    public void ganharXp(int quantidade) {
+        xp += quantidade;
+        System.out.println(nome + " ganhou " + quantidade + " XP!");
+
+        while (xp >= xpParaProximoNivel) {
+            xp -= xpParaProximoNivel;
+            subirNivel();
+        }
+    }
+
+    public void subirNivel() {
+        nivel++;
+        vida += 15;
+        ataque += 3;
+
+        for (int i = 0; i < numeroAtaques; i++) {
+            danosAtaques[i] += 3;
+        }
+
+        xpParaProximoNivel += 50;
+
+        System.out.println("⬆️ " + nome + " subiu para o nível " + nivel + "!");
+        System.out.println("Vida e ataque aumentaram!");
+    }
+
     public boolean estaVivo() {
         return vida > 0;
     }
 
     public void mostrarStatus() {
-        System.out.println(nome + " (" + tipo + ") - Vida: " + vida + " | Poções: " + pocoes);
+        System.out.println(nome + " (" + tipo + ") - Vida: " + vida +
+                " | Poções: " + pocoes +
+                " | Nível: " + nivel +
+                " | XP: " + xp + "/" + xpParaProximoNivel);
 
         System.out.println("Ataques disponíveis:");
         for (int i = 0; i < numeroAtaques; i++) {

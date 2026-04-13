@@ -75,6 +75,8 @@ public class JogoPokemon {
                 vitorias++;
                 System.out.println("🏆 Vitórias consecutivas: " + vitorias);
 
+                jogador.ganharXp(50);
+
                 if (vitorias % 2 == 0) {
                     jogador.evoluir();
                 }
