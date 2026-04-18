@@ -3,6 +3,7 @@ public class Pokemon {
     String nome;
     String tipo;
     int vida;
+    int vidaMaxima;
     int ataque;
     int pocoes = 2;
 
@@ -18,6 +19,7 @@ public class Pokemon {
         this.nome = nome;
         this.tipo = tipo;
         this.vida = vida;
+        this.vidaMaxima = vida;
         this.ataque = ataque;
 
         ataques[0] = "Ataque Básico";
@@ -63,6 +65,11 @@ public class Pokemon {
     public void usarPocao() {
         if (pocoes > 0) {
             vida += 20;
+
+            if (vida > vidaMaxima) {
+                vida = vidaMaxima;
+            }
+
             pocoes--;
             System.out.println(nome + " usou poção! Vida +20 | Poções restantes: " + pocoes);
         } else {
@@ -72,6 +79,23 @@ public class Pokemon {
 
     public void evoluir() {
         if (numeroAtaques < 4) {
+
+            // Troca de nome
+            if (nome.equals("Charmander")) {
+                nome = "Charmeleon";
+            } else if (nome.equals("Charmeleon")) {
+                nome = "Charizard";
+            } else if (nome.equals("Squirtle")) {
+                nome = "Wartortle";
+            } else if (nome.equals("Wartortle")) {
+                nome = "Blastoise";
+            } else if (nome.equals("Bulbasaur")) {
+                nome = "Ivysaur";
+            } else if (nome.equals("Ivysaur")) {
+                nome = "Venusaur";
+            }
+
+            // Novos ataques
             if (tipo.equals("Fogo")) {
                 if (numeroAtaques == 2) {
                     ataques[2] = "Lança-Chamas";
@@ -99,10 +123,12 @@ public class Pokemon {
             }
 
             numeroAtaques++;
-            vida += 20;
             ataque += 5;
+            vidaMaxima += 20;
+            vida = vidaMaxima;
 
-            System.out.println("✨ " + nome + " evoluiu e aprendeu um novo ataque!");
+            System.out.println("✨ Seu Pokémon evoluiu para " + nome + "!");
+            System.out.println("❤️ Vida restaurada completamente!");
         } else {
             System.out.println(nome + " já possui o máximo de ataques!");
         }
@@ -120,7 +146,8 @@ public class Pokemon {
 
     public void subirNivel() {
         nivel++;
-        vida += 15;
+        vidaMaxima += 15;
+        vida = vidaMaxima;
         ataque += 3;
 
         for (int i = 0; i < numeroAtaques; i++) {
@@ -138,7 +165,7 @@ public class Pokemon {
     }
 
     public void mostrarStatus() {
-        System.out.println(nome + " (" + tipo + ") - Vida: " + vida +
+        System.out.println(nome + " (" + tipo + ") - Vida: " + vida + "/" + vidaMaxima +
                 " | Poções: " + pocoes +
                 " | Nível: " + nivel +
                 " | XP: " + xp + "/" + xpParaProximoNivel);
