@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Pokemon {
 
     String nome;
@@ -14,6 +16,8 @@ public class Pokemon {
     int nivel = 1;
     int xp = 0;
     int xpParaProximoNivel = 100;
+
+    Random random = new Random();
 
     public Pokemon(String nome, String tipo, int vida, int ataque) {
         this.nome = nome;
@@ -45,6 +49,13 @@ public class Pokemon {
 
         int danoFinal = danosAtaques[escolhaAtaque];
 
+        // Ataque crítico (20% de chance)
+        if (random.nextInt(100) < 20) {
+            danoFinal *= 2;
+            System.out.println("💥 Ataque crítico!");
+        }
+
+        // Vantagem de tipo
         if ((this.tipo.equals("Fogo") && inimigo.tipo.equals("Planta")) ||
                 (this.tipo.equals("Planta") && inimigo.tipo.equals("Água")) ||
                 (this.tipo.equals("Água") && inimigo.tipo.equals("Fogo"))) {
@@ -164,8 +175,26 @@ public class Pokemon {
         return vida > 0;
     }
 
+    public String gerarBarraVida() {
+        int tamanhoBarra = 10;
+        int blocosCheios = (vida * tamanhoBarra) / vidaMaxima;
+
+        String barra = "[";
+
+        for (int i = 0; i < tamanhoBarra; i++) {
+            if (i < blocosCheios) {
+                barra += "█";
+            } else {
+                barra += "░";
+            }
+        }
+
+        barra += "]";
+        return barra;
+    }
+
     public void mostrarStatus() {
-        System.out.println(nome + " (" + tipo + ") - Vida: " + vida + "/" + vidaMaxima +
+        System.out.println(nome + " (" + tipo + ") - Vida: " + vida + "/" + vidaMaxima + " " + gerarBarraVida() +
                 " | Poções: " + pocoes +
                 " | Nível: " + nivel +
                 " | XP: " + xp + "/" + xpParaProximoNivel);
@@ -174,5 +203,9 @@ public class Pokemon {
         for (int i = 0; i < numeroAtaques; i++) {
             System.out.println((i + 1) + " - " + ataques[i] + " | Dano: " + danosAtaques[i]);
         }
+    }
+
+    public void mostrarStatusInimigo() {
+        System.out.println(nome + " (" + tipo + ") - Vida: " + vida + "/" + vidaMaxima + " " + gerarBarraVida());
     }
 }

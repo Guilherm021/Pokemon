@@ -41,8 +41,12 @@ public class JogoPokemon {
             System.out.println("\n⚔️ Novo oponente: " + inimigo.nome + "!\n");
 
             while (jogador.estaVivo() && inimigo.estaVivo()) {
+
+                System.out.println("=== SEU POKÉMON ===");
                 jogador.mostrarStatus();
-                inimigo.mostrarStatus();
+
+                System.out.println("\n=== OPONENTE ===");
+                inimigo.mostrarStatusInimigo();
 
                 System.out.println("\nEscolha:");
                 System.out.println("1 - Atacar");
