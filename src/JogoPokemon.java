@@ -34,11 +34,22 @@ public class JogoPokemon {
                 new Pokemon("Bulbasaur", "Planta", 105, 19)
         };
 
-        int vitorias = 0;
+        Pokemon chefeFinal = new Pokemon("Mewtwo", "Psíquico", 180, 30);
 
-        while (jogador.estaVivo()) {
-            Pokemon inimigo = inimigos[random.nextInt(inimigos.length)];
-            System.out.println("\n⚔️ Novo oponente: " + inimigo.nome + "!\n");
+        int vitorias = 0;
+        boolean chefeDerrotado = false;
+
+        while (jogador.estaVivo() && !chefeDerrotado) {
+
+            Pokemon inimigo;
+
+            if (vitorias >= 5) {
+                inimigo = chefeFinal;
+                System.out.println("\n👑 CHEFÃO FINAL APARECEU: " + inimigo.nome + "!\n");
+            } else {
+                inimigo = inimigos[random.nextInt(inimigos.length)];
+                System.out.println("\n⚔️ Novo oponente: " + inimigo.nome + "!\n");
+            }
 
             while (jogador.estaVivo() && inimigo.estaVivo()) {
 
@@ -76,18 +87,26 @@ public class JogoPokemon {
             }
 
             if (jogador.estaVivo()) {
-                vitorias++;
-                System.out.println("🏆 Vitórias consecutivas: " + vitorias);
+                if (inimigo.nome.equals("Mewtwo")) {
+                    chefeDerrotado = true;
+                    System.out.println("\n🏆 PARABÉNS! VOCÊ DERROTOU O CHEFÃO FINAL E VENCEU O JOGO!");
+                } else {
+                    vitorias++;
+                    System.out.println("🏆 Vitórias consecutivas: " + vitorias);
 
-                jogador.ganharXp(50);
+                    jogador.ganharXp(50);
 
-                if (vitorias % 2 == 0) {
-                    jogador.evoluir();
+                    if (vitorias % 2 == 0) {
+                        jogador.evoluir();
+                    }
                 }
             }
         }
 
-        System.out.println("💀 Game Over!");
+        if (!jogador.estaVivo()) {
+            System.out.println("💀 Game Over!");
+        }
+
         scanner.close();
     }
 }
