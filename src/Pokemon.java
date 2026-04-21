@@ -8,6 +8,7 @@ public class Pokemon {
     int vidaMaxima;
     int ataque;
     int pocoes = 2;
+    int pokeCoins = 0;
 
     String[] ataques = new String[4];
     int[] danosAtaques = new int[4];
@@ -49,13 +50,11 @@ public class Pokemon {
 
         int danoFinal = danosAtaques[escolhaAtaque];
 
-        // Ataque crítico (20% de chance)
         if (random.nextInt(100) < 20) {
             danoFinal *= 2;
             System.out.println("💥 Ataque crítico!");
         }
 
-        // Vantagem de tipo
         if ((this.tipo.equals("Fogo") && inimigo.tipo.equals("Planta")) ||
                 (this.tipo.equals("Planta") && inimigo.tipo.equals("Água")) ||
                 (this.tipo.equals("Água") && inimigo.tipo.equals("Fogo"))) {
@@ -91,7 +90,6 @@ public class Pokemon {
     public void evoluir() {
         if (numeroAtaques < 4) {
 
-            // Troca de nome
             if (nome.equals("Charmander")) {
                 nome = "Charmeleon";
             } else if (nome.equals("Charmeleon")) {
@@ -106,7 +104,6 @@ public class Pokemon {
                 nome = "Venusaur";
             }
 
-            // Novos ataques
             if (tipo.equals("Fogo")) {
                 if (numeroAtaques == 2) {
                     ataques[2] = "Lança-Chamas";
@@ -171,6 +168,46 @@ public class Pokemon {
         System.out.println("Vida e ataque aumentaram!");
     }
 
+    public void ganharPokeCoins(int quantidade) {
+        pokeCoins += quantidade;
+        System.out.println("🪙 " + nome + " ganhou " + quantidade + " PokéCoins!");
+    }
+
+    public void comprarPocao() {
+        if (pokeCoins >= 50) {
+            pokeCoins -= 50;
+            pocoes++;
+            System.out.println("🛒 Você comprou 1 poção! Poções atuais: " + pocoes);
+        } else {
+            System.out.println("❌ PokéCoins insuficientes!");
+        }
+    }
+
+    public void curaTotal() {
+        if (pokeCoins >= 100) {
+            pokeCoins -= 100;
+            vida = vidaMaxima;
+            System.out.println("💖 Cura total realizada!");
+        } else {
+            System.out.println("❌ PokéCoins insuficientes!");
+        }
+    }
+
+    public void melhorarAtaque() {
+        if (pokeCoins >= 120) {
+            pokeCoins -= 120;
+            ataque += 5;
+
+            for (int i = 0; i < numeroAtaques; i++) {
+                danosAtaques[i] += 5;
+            }
+
+            System.out.println("⚔️ Seu ataque aumentou em +5!");
+        } else {
+            System.out.println("❌ PokéCoins insuficientes!");
+        }
+    }
+
     public boolean estaVivo() {
         return vida > 0;
     }
@@ -197,7 +234,8 @@ public class Pokemon {
         System.out.println(nome + " (" + tipo + ") - Vida: " + vida + "/" + vidaMaxima + " " + gerarBarraVida() +
                 " | Poções: " + pocoes +
                 " | Nível: " + nivel +
-                " | XP: " + xp + "/" + xpParaProximoNivel);
+                " | XP: " + xp + "/" + xpParaProximoNivel +
+                " | PokéCoins: " + pokeCoins);
 
         System.out.println("Ataques disponíveis:");
         for (int i = 0; i < numeroAtaques; i++) {

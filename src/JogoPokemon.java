@@ -3,6 +3,50 @@ import java.util.Scanner;
 
 public class JogoPokemon {
 
+    public static void pausar() {
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static void mostrarLoja(Pokemon jogador, Scanner scanner) {
+        boolean naLoja = true;
+
+        while (naLoja) {
+            System.out.println("\n==============================");
+            System.out.println("🛒 LOJA POKÉMON");
+            System.out.println("==============================");
+            System.out.println("PokéCoins: " + jogador.pokeCoins);
+            System.out.println("1 - Comprar Poção (+1) ....... 50 PokéCoins");
+            System.out.println("2 - Cura Total .............. 100 PokéCoins");
+            System.out.println("3 - +5 de Ataque ............ 120 PokéCoins");
+            System.out.println("4 - Continuar jornada");
+            System.out.println("==============================");
+
+            int opcaoLoja = scanner.nextInt();
+
+            switch (opcaoLoja) {
+                case 1:
+                    jogador.comprarPocao();
+                    break;
+                case 2:
+                    jogador.curaTotal();
+                    break;
+                case 3:
+                    jogador.melhorarAtaque();
+                    break;
+                case 4:
+                    naLoja = false;
+                    System.out.println("➡️ Saindo da loja...");
+                    break;
+                default:
+                    System.out.println("❌ Opção inválida!");
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -15,7 +59,9 @@ public class JogoPokemon {
 
         while (jogarNovamente) {
 
+            System.out.println("====================================");
             System.out.println("🔥 BEM-VINDO AO MUNDO POKÉMON 🔥");
+            System.out.println("====================================");
             System.out.println("Escolha seu Pokémon:");
             System.out.println("1 - Charmander (Fogo)");
             System.out.println("2 - Squirtle (Água)");
@@ -51,19 +97,23 @@ public class JogoPokemon {
 
                 if (vitorias >= 5) {
                     inimigo = new Pokemon("Mewtwo", "Psíquico", 180, 30);
-                    System.out.println("\n👑 CHEFÃO FINAL APARECEU: " + inimigo.nome + "!\n");
+                    System.out.println("\n👑 CHEFÃO FINAL APARECEU: " + inimigo.nome + "!");
+                    pausar();
                 } else {
                     inimigo = inimigos[random.nextInt(inimigos.length)];
-                    System.out.println("\n⚔️ Novo oponente: " + inimigo.nome + "!\n");
+                    System.out.println("\n⚔️ Novo oponente: " + inimigo.nome + "!");
+                    pausar();
                 }
 
                 while (jogador.estaVivo() && inimigo.estaVivo()) {
 
+                    System.out.println("\n====================================");
                     System.out.println("=== SEU POKÉMON ===");
                     jogador.mostrarStatus();
 
                     System.out.println("\n=== OPONENTE ===");
                     inimigo.mostrarStatusInimigo();
+                    System.out.println("====================================");
 
                     System.out.println("\nEscolha:");
                     System.out.println("1 - Atacar");
@@ -79,16 +129,19 @@ public class JogoPokemon {
 
                         int ataqueEscolhido = scanner.nextInt() - 1;
                         jogador.atacar(inimigo, ataqueEscolhido);
+                        pausar();
 
                     } else if (acao == 2) {
                         jogador.usarPocao();
+                        pausar();
                     } else {
-                        System.out.println("Opção inválida!");
+                        System.out.println("❌ Opção inválida!");
                     }
 
                     if (inimigo.estaVivo()) {
                         int ataqueInimigo = random.nextInt(inimigo.numeroAtaques);
                         inimigo.atacar(jogador, ataqueInimigo);
+                        pausar();
                     }
                 }
 
@@ -101,10 +154,13 @@ public class JogoPokemon {
                         System.out.println("🏆 Vitórias consecutivas: " + vitorias);
 
                         jogador.ganharXp(50);
+                        jogador.ganharPokeCoins(50);
 
                         if (vitorias % 2 == 0) {
                             jogador.evoluir();
                         }
+
+                        mostrarLoja(jogador, scanner);
                     }
                 }
             }
