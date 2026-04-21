@@ -1,8 +1,5 @@
+import java.util.Random;
 import java.util.Scanner;
-import java.util.Random;
-
-public class JogoPokemon import java.util.Scanner;
-import java.util.Random;
 
 public class JogoPokemon {
 
@@ -36,6 +33,7 @@ public class JogoPokemon {
                     break;
                 default:
                     jogador = new Pokemon("Bulbasaur", "Planta", 105, 19);
+                    break;
             }
 
             Pokemon[] inimigos = {
@@ -43,8 +41,6 @@ public class JogoPokemon {
                     new Pokemon("Squirtle", "Água", 110, 18),
                     new Pokemon("Bulbasaur", "Planta", 105, 19)
             };
-
-            Pokemon chefeFinal = new Pokemon("Mewtwo", "Psíquico", 180, 30);
 
             int vitorias = 0;
             boolean chefeDerrotado = false;
@@ -117,7 +113,6 @@ public class JogoPokemon {
                 System.out.println("💀 Game Over!");
             }
 
-            // Atualiza recordes
             if (vitorias > recordeVitorias) {
                 recordeVitorias = vitorias;
             }
@@ -126,7 +121,6 @@ public class JogoPokemon {
                 recordeNivel = jogador.nivel;
             }
 
-            // Mostra ranking
             System.out.println("\n=== RANKING DA PARTIDA ===");
             System.out.println("🏆 Vitórias nesta partida: " + vitorias);
             System.out.println("⭐ Nível alcançado nesta partida: " + jogador.nivel);
@@ -135,7 +129,6 @@ public class JogoPokemon {
             System.out.println("🏅 Recorde de vitórias: " + recordeVitorias);
             System.out.println("🌟 Maior nível alcançado: " + recordeNivel);
 
-            // Reiniciar partida
             System.out.println("\nDeseja jogar novamente?");
             System.out.println("1 - Sim");
             System.out.println("2 - Não");
