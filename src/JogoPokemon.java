@@ -3,47 +3,66 @@ import java.util.Scanner;
 
 public class JogoPokemon {
 
-    public static void pausar() {
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+    public static void aplicarBonusFinal(Pokemon jogador, Scanner scanner) {
+        System.out.println("\n====================================");
+        System.out.println("🎁 BÔNUS FINAL ANTES DO CHEFÃO");
+        System.out.println("====================================");
+        System.out.println("Escolha um bônus:");
+        System.out.println("1 - Cura Total");
+        System.out.println("2 - +10 de Ataque");
+        System.out.println("3 - +2 Poções");
+
+        int bonus = scanner.nextInt();
+
+        switch (bonus) {
+            case 1:
+                jogador.vida = jogador.vidaMaxima;
+                System.out.println("💖 Seu Pokémon foi curado totalmente!");
+                break;
+            case 2:
+                jogador.ataque += 10;
+                for (int i = 0; i < jogador.numeroAtaques; i++) {
+                    jogador.danosAtaques[i] += 10;
+                }
+                System.out.println("⚔️ Seu ataque aumentou em +10!");
+                break;
+            case 3:
+                jogador.pocoes += 2;
+                System.out.println("🧪 Você ganhou +2 poções!");
+                break;
+            default:
+                System.out.println("❌ Opção inválida! Nenhum bônus recebido.");
         }
     }
 
-    public static void mostrarLoja(Pokemon jogador, Scanner scanner) {
-        boolean naLoja = true;
+    public static Pokemon criarInimigoPorFase(int fase, String nomeBase) {
+        switch (nomeBase) {
+            case "Charmander":
+                if (fase == 1) {
+                    return new Pokemon("Charmander", "Fogo", 100, 20);
+                } else if (fase == 2) {
+                    return new Pokemon("Charmeleon", "Fogo", 120, 25);
+                } else {
+                    return new Pokemon("Charizard", "Fogo", 140, 30);
+                }
 
-        while (naLoja) {
-            System.out.println("\n==============================");
-            System.out.println("🛒 LOJA POKÉMON");
-            System.out.println("==============================");
-            System.out.println("PokéCoins: " + jogador.pokeCoins);
-            System.out.println("1 - Comprar Poção (+1) ....... 50 PokéCoins");
-            System.out.println("2 - Cura Total .............. 100 PokéCoins");
-            System.out.println("3 - +5 de Ataque ............ 120 PokéCoins");
-            System.out.println("4 - Continuar jornada");
-            System.out.println("==============================");
+            case "Squirtle":
+                if (fase == 1) {
+                    return new Pokemon("Squirtle", "Água", 110, 18);
+                } else if (fase == 2) {
+                    return new Pokemon("Wartortle", "Água", 130, 23);
+                } else {
+                    return new Pokemon("Blastoise", "Água", 150, 28);
+                }
 
-            int opcaoLoja = scanner.nextInt();
-
-            switch (opcaoLoja) {
-                case 1:
-                    jogador.comprarPocao();
-                    break;
-                case 2:
-                    jogador.curaTotal();
-                    break;
-                case 3:
-                    jogador.melhorarAtaque();
-                    break;
-                case 4:
-                    naLoja = false;
-                    System.out.println("➡️ Saindo da loja...");
-                    break;
-                default:
-                    System.out.println("❌ Opção inválida!");
-            }
+            default:
+                if (fase == 1) {
+                    return new Pokemon("Bulbasaur", "Planta", 105, 19);
+                } else if (fase == 2) {
+                    return new Pokemon("Ivysaur", "Planta", 125, 24);
+                } else {
+                    return new Pokemon("Venusaur", "Planta", 145, 29);
+                }
         }
     }
 
@@ -69,51 +88,72 @@ public class JogoPokemon {
 
             int escolha = scanner.nextInt();
             Pokemon jogador;
+            String pokemonInicialJogador;
 
             switch (escolha) {
                 case 1:
                     jogador = new Pokemon("Charmander", "Fogo", 100, 20);
+                    pokemonInicialJogador = "Charmander";
                     break;
                 case 2:
                     jogador = new Pokemon("Squirtle", "Água", 110, 18);
+                    pokemonInicialJogador = "Squirtle";
                     break;
                 default:
                     jogador = new Pokemon("Bulbasaur", "Planta", 105, 19);
+                    pokemonInicialJogador = "Bulbasaur";
                     break;
             }
 
-            Pokemon[] inimigos = {
-                    new Pokemon("Charmander", "Fogo", 100, 20),
-                    new Pokemon("Squirtle", "Água", 110, 18),
-                    new Pokemon("Bulbasaur", "Planta", 105, 19)
-            };
+            String[] bases = {"Charmander", "Squirtle", "Bulbasaur"};
+            String[] inimigosBase = new String[2];
+            int indice = 0;
+
+            for (String base : bases) {
+                if (!base.equals(pokemonInicialJogador)) {
+                    inimigosBase[indice] = base;
+                    indice++;
+                }
+            }
+
+            // Embaralha os dois inimigos possíveis
+            if (random.nextBoolean()) {
+                String temp = inimigosBase[0];
+                inimigosBase[0] = inimigosBase[1];
+                inimigosBase[1] = temp;
+            }
 
             int vitorias = 0;
             boolean chefeDerrotado = false;
 
-            while (jogador.estaVivo() && !chefeDerrotado) {
+            // 3 batalhas antes do boss
+            for (int fase = 1; fase <= 3 && jogador.estaVivo(); fase++) {
 
-                Pokemon inimigo;
+                String nomeBaseInimigo;
 
-                if (vitorias >= 5) {
-                    inimigo = new Pokemon("Mewtwo", "Psíquico", 180, 30);
-                    System.out.println("\n👑 CHEFÃO FINAL APARECEU: " + inimigo.nome + "!");
-                    pausar();
+                if (fase == 1) {
+                    nomeBaseInimigo = inimigosBase[0];
+                } else if (fase == 2) {
+                    nomeBaseInimigo = inimigosBase[1];
                 } else {
-                    inimigo = inimigos[random.nextInt(inimigos.length)];
-                    System.out.println("\n⚔️ Novo oponente: " + inimigo.nome + "!");
-                    pausar();
+                    // terceira batalha usa um dos dois de novo, mas agora na evolução final
+                    nomeBaseInimigo = inimigosBase[random.nextInt(2)];
                 }
+
+                Pokemon inimigo = criarInimigoPorFase(fase, nomeBaseInimigo);
+
+                System.out.println("\n====================================");
+                System.out.println("⚔️ BATALHA " + fase);
+                System.out.println("====================================");
+                System.out.println("Oponente: " + inimigo.nome + " (" + inimigo.tipo + ")");
 
                 while (jogador.estaVivo() && inimigo.estaVivo()) {
 
-                    System.out.println("\n====================================");
-                    System.out.println("=== SEU POKÉMON ===");
+                    System.out.println("\n=== SEU POKÉMON ===");
                     jogador.mostrarStatus();
 
                     System.out.println("\n=== OPONENTE ===");
                     inimigo.mostrarStatusInimigo();
-                    System.out.println("====================================");
 
                     System.out.println("\nEscolha:");
                     System.out.println("1 - Atacar");
@@ -129,11 +169,9 @@ public class JogoPokemon {
 
                         int ataqueEscolhido = scanner.nextInt() - 1;
                         jogador.atacar(inimigo, ataqueEscolhido);
-                        pausar();
 
                     } else if (acao == 2) {
                         jogador.usarPocao();
-                        pausar();
                     } else {
                         System.out.println("❌ Opção inválida!");
                     }
@@ -141,27 +179,76 @@ public class JogoPokemon {
                     if (inimigo.estaVivo()) {
                         int ataqueInimigo = random.nextInt(inimigo.numeroAtaques);
                         inimigo.atacar(jogador, ataqueInimigo);
-                        pausar();
                     }
                 }
 
                 if (jogador.estaVivo()) {
-                    if (inimigo.nome.equals("Mewtwo")) {
-                        chefeDerrotado = true;
-                        System.out.println("\n🏆 PARABÉNS! VOCÊ DERROTOU O CHEFÃO FINAL E VENCEU O JOGO!");
+                    vitorias++;
+                    System.out.println("\n🏆 Você derrotou " + inimigo.nome + "!");
+                    System.out.println("🏆 Vitórias consecutivas: " + vitorias);
+
+                    jogador.ganharXp(50);
+                    jogador.ganharPokeCoins(50);
+
+                    String nomeAntes = jogador.nome;
+                    jogador.evoluir();
+
+                    if (!nomeAntes.equals(jogador.nome)) {
+                        System.out.println("🌟 " + nomeAntes + " evoluiu para " + jogador.nome + "!");
                     } else {
-                        vitorias++;
-                        System.out.println("🏆 Vitórias consecutivas: " + vitorias);
+                        System.out.println("🌟 Seu Pokémon ficou mais forte!");
+                    }
+                }
+            }
 
-                        jogador.ganharXp(50);
-                        jogador.ganharPokeCoins(50);
+            if (jogador.estaVivo()) {
+                aplicarBonusFinal(jogador, scanner);
 
-                        if (vitorias % 2 == 0) {
-                            jogador.evoluir();
+                Pokemon chefeFinal = new Pokemon("Mewtwo", "Psíquico", 180, 30);
+
+                System.out.println("\n====================================");
+                System.out.println("👑 CHEFÃO FINAL APARECEU: " + chefeFinal.nome + "!");
+                System.out.println("====================================");
+
+                while (jogador.estaVivo() && chefeFinal.estaVivo()) {
+
+                    System.out.println("\n=== SEU POKÉMON ===");
+                    jogador.mostrarStatus();
+
+                    System.out.println("\n=== CHEFÃO FINAL ===");
+                    chefeFinal.mostrarStatusInimigo();
+
+                    System.out.println("\nEscolha:");
+                    System.out.println("1 - Atacar");
+                    System.out.println("2 - Usar Poção");
+
+                    int acao = scanner.nextInt();
+
+                    if (acao == 1) {
+                        System.out.println("\nEscolha seu ataque:");
+                        for (int i = 0; i < jogador.numeroAtaques; i++) {
+                            System.out.println((i + 1) + " - " + jogador.ataques[i]);
                         }
 
-                        mostrarLoja(jogador, scanner);
+                        int ataqueEscolhido = scanner.nextInt() - 1;
+                        jogador.atacar(chefeFinal, ataqueEscolhido);
+
+                    } else if (acao == 2) {
+                        jogador.usarPocao();
+                    } else {
+                        System.out.println("❌ Opção inválida!");
                     }
+
+                    if (chefeFinal.estaVivo()) {
+                        int ataqueInimigo = random.nextInt(chefeFinal.numeroAtaques);
+                        chefeFinal.atacar(jogador, ataqueInimigo);
+                    }
+                }
+
+                if (jogador.estaVivo()) {
+                    chefeDerrotado = true;
+                    vitorias++;
+                    System.out.println("\n🏆 PARABÉNS! VOCÊ DERROTOU O CHEFÃO FINAL E VENCEU O JOGO!");
                 }
             }
 
